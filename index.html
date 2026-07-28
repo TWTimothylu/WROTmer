@@ -93,9 +93,14 @@
       <section class="panel teams-panel">
         <div class="panel-header-inline">
           <h2 class="panel-title"><span class="icon">👥</span> 組別管理</h2>
-          <button id="btn-reset-teams" class="btn btn-danger-text" title="清除所有組別與數據">
-            <span class="icon">🗑️</span> 重設所有組別
-          </button>
+          <div class="panel-header-actions">
+            <button id="btn-reset-queues" class="btn btn-secondary" title="將所有組別的排隊次數歸零，並還原回全域時間">
+              <span class="icon">🧹</span> 歸零排隊次數
+            </button>
+            <button id="btn-reset-teams" class="btn btn-danger-text" title="清除所有組別與數據">
+              <span class="icon">🗑️</span> 重設所有組別
+            </button>
+          </div>
         </div>
 
         <!-- Add Team Form -->

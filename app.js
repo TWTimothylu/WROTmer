@@ -25,6 +25,7 @@ const elBtnSoundTest = document.getElementById('btn-sound-test');
 const elFormAddTeam = document.getElementById('form-add-team');
 const elInputTeamName = document.getElementById('input-team-name');
 const elTeamsGrid = document.getElementById('teams-grid');
+const elBtnResetQueues = document.getElementById('btn-reset-queues');
 const elBtnResetTeams = document.getElementById('btn-reset-teams');
 const elPwaStatus = document.getElementById('pwa-status');
 
@@ -477,6 +478,20 @@ window.queueTeam = function(id) {
     render();
   }
 };
+
+// Reset all queues count and restore team times to global remaining time
+elBtnResetQueues.addEventListener('click', () => {
+  if (state.teams.length === 0) return;
+  if (confirm('確定要將所有組別的排隊次數歸零，並還原時間嗎？')) {
+    state.teams.forEach(team => {
+      team.queueCount = 0;
+      team.remainingTime = state.globalRemainingTime;
+      team.isFinished = state.globalRemainingTime <= 0;
+    });
+    saveState();
+    render();
+  }
+});
 
 // Reset all team records
 elBtnResetTeams.addEventListener('click', () => {
