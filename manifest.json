@@ -1,0 +1,18 @@
+{
+  "name": "WROTimer - 離線競技倒數計時器",
+  "short_name": "WROTimer",
+  "description": "專為 WRO 機器人競賽設計的離線倒數計時器，支援多組別排隊計數與自動時間扣減。",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#080c10",
+  "theme_color": "#080c10",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

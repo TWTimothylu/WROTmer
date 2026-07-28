@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WROTimer - 離線競技倒數計時器</title>
+  <meta name="description" content="專為 WRO 機器人競賽設計的離線倒數計時器，支援多組別排隊計數與自動時間扣減。">
+  <!-- PWA Support -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0d1117">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⏱️</text></svg>">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⏱️</text></svg>">
+  
+  <!-- Fallback local styling references, Web fonts load asynchronously -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Noto+Sans+TC:wght@300;400;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Ambient background glow elements -->
+  <div class="bg-glow bg-glow-blue"></div>
+  <div class="bg-glow bg-glow-purple"></div>
+
+  <div class="app-container">
+    <header class="app-header">
+      <div class="header-main">
+        <h1>WRO Timer <span class="badge">Offline Pro</span></h1>
+        <p class="subtitle">離線倒數計時與排隊管理系統</p>
+      </div>
+      <div class="audio-control-wrapper">
+        <button id="btn-sound-test" class="btn btn-secondary btn-glow" title="點擊啟用並測試瀏覽器音效">
+          <span class="icon">🔊</span> 測試並啟用音效
+        </button>
+      </div>
+    </header>
+
+    <main class="app-content">
+      <!-- Left Panel: Global Timer and Setup -->
+      <section class="panel global-panel">
+        <h2 class="panel-title"><span class="icon">🌐</span> 全域競賽時間</h2>
+        
+        <div class="global-timer-display">
+          <!-- Outer circle SVG for animation -->
+          <svg class="progress-ring" width="220" height="220">
+            <circle class="progress-ring__circle-bg" stroke="rgba(255,255,255,0.05)" stroke-width="8" fill="transparent" r="98" cx="110" cy="110"/>
+            <circle id="global-progress-bar" class="progress-ring__circle" stroke="var(--neon-blue)" stroke-width="8" stroke-dasharray="615.75" stroke-dashoffset="0" fill="transparent" r="98" cx="110" cy="110"/>
+          </svg>
+          <div class="timer-digits-container">
+            <div id="global-timer-text" class="timer-text">150:00</div>
+            <div id="global-status-text" class="timer-status">已準備</div>
+          </div>
+        </div>
+
+        <!-- Global Action Controls -->
+        <div class="control-row">
+          <button id="btn-global-play" class="btn btn-primary btn-glow-blue">
+            <span class="icon">▶️</span> 開始
+          </button>
+          <button id="btn-global-pause" class="btn btn-warning" disabled>
+            <span class="icon">⏸️</span> 暫停
+          </button>
+          <button id="btn-global-reset" class="btn btn-danger">
+            <span class="icon">🔄</span> 重設
+          </button>
+        </div>
+
+        <!-- Quick Time Adjustment -->
+        <div class="adjust-box">
+          <h3>時間快速微調</h3>
+          <div class="adjust-buttons">
+            <button class="btn btn-adjust" data-seconds="600">+10分</button>
+            <button class="btn btn-adjust" data-seconds="300">+5分</button>
+            <button class="btn btn-adjust" data-seconds="60">+1分</button>
+            <button class="btn btn-adjust" data-seconds="-60">-1分</button>
+            <button class="btn btn-adjust" data-seconds="-300">-5分</button>
+            <button class="btn btn-adjust" data-seconds="-600">-10分</button>
+          </div>
+        </div>
+
+        <!-- Setting initial global time -->
+        <div class="settings-box">
+          <h3>設定初始時間</h3>
+          <div class="input-group">
+            <input type="number" id="input-global-minutes" min="1" max="999" value="150" placeholder="分">
+            <span class="input-addon">分鐘</span>
+            <button id="btn-apply-settings" class="btn btn-secondary">套用</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Right Panel: Group/Team Cards Management -->
+      <section class="panel teams-panel">
+        <div class="panel-header-inline">
+          <h2 class="panel-title"><span class="icon">👥</span> 組別管理</h2>
+          <button id="btn-reset-teams" class="btn btn-danger-text" title="清除所有組別與數據">
+            <span class="icon">🗑️</span> 重設所有組別
+          </button>
+        </div>
+
+        <!-- Add Team Form -->
+        <form id="form-add-team" class="add-team-form" onsubmit="return false;">
+          <div class="input-group">
+            <input type="text" id="input-team-name" placeholder="輸入組別名稱 (例如: Team A, 機器人一組)" required maxlength="20">
+            <button type="submit" id="btn-add-team" class="btn btn-success btn-glow-green">
+              <span class="icon">➕</span> 新增組別
+            </button>
+          </div>
+        </form>
+
+        <!-- Teams Grid Container -->
+        <div id="teams-grid" class="teams-grid">
+          <!-- Team Cards will be inserted dynamically here -->
+          <div class="empty-state" id="empty-state-placeholder">
+            <div class="empty-icon">🤖</div>
+            <h3>目前沒有任何組別</h3>
+            <p>請在上方輸入組別名稱，並點選「新增組別」開始計時與排隊管理。</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="app-footer">
+      <p>WROTimer &copy; 2026 - 專為 WRO 競賽培訓打造的離線工具</p>
+      <p class="footer-links">
+        <a href="https://github.com/TWTimothylu/WROTmer.git" target="_blank" rel="noopener">GitHub 專案庫</a> | 
+        <span id="pwa-status">離線功能載入中...</span>
+      </p>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

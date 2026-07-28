@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <rect width="512" height="512" rx="128" fill="#080c10"/>
+  <!-- Stopwatch glow -->
+  <circle cx="256" cy="280" r="160" fill="rgba(0, 210, 255, 0.05)"/>
+  <!-- Stopwatch outline -->
+  <circle cx="256" cy="280" r="160" stroke="#00d2ff" stroke-width="24" fill="none"/>
+  <!-- Top button -->
+  <rect x="232" y="70" width="48" height="50" rx="8" fill="#ffaa00"/>
+  <!-- Side button -->
+  <rect x="375" y="125" width="40" height="24" rx="4" transform="rotate(30 375 125)" fill="#00ff88"/>
+  <!-- Stopwatch Hands -->
+  <circle cx="256" cy="280" r="20" fill="#f0f6fc"/>
+  <line x1="256" y1="280" x2="256" y2="180" stroke="#ff3366" stroke-width="12" stroke-linecap="round"/>
+  <!-- Tick marks -->
+  <line x1="256" y1="120" x2="256" y2="140" stroke="#00d2ff" stroke-width="8"/>
+  <line x1="256" y1="420" x2="256" y2="440" stroke="#00d2ff" stroke-width="8"/>
+  <line x1="96" y1="280" x2="116" y2="280" stroke="#00d2ff" stroke-width="8"/>
+  <line x1="396" y1="280" x2="416" y2="280" stroke="#00d2ff" stroke-width="8"/>
+</svg>
